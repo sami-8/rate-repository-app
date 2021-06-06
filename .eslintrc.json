@@ -12,6 +12,7 @@
     },
     "rules": {
         "react/prop-types": "off",
-        "semi": ["error", "never"]
+        "semi": ["error", "never"],
+        "indent": ["error", 2]
     }
 }
