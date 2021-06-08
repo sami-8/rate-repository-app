@@ -5,7 +5,11 @@ import RepositoryItem from './RepositoryItem'
 const styles = StyleSheet.create({
   separator: {
     height: 10,
+    backgroundColor: '#e1e4e8',
   },
+  flatList: {
+    backgroundColor: 'white'
+  }
 })
 
 const repositories = [
@@ -55,17 +59,19 @@ const repositories = [
   },
 ]
 
-const ItemSeparator = () => <View style={styles.separator} />
-
 const RepositoryList = () => {
   return (
-    <FlatList
-      data={repositories}
-      renderItem={listItem => <RepositoryItem listItem={listItem} />}
-      ItemSeparatorComponent={ItemSeparator}
-      keyExtractor={item => item.id}
-    />
+    <View style={styles.flatList}>
+      <FlatList
+        data={repositories}
+        renderItem={listItem => <RepositoryItem listItem={listItem} />}
+        ItemSeparatorComponent={ItemSeparator}
+        keyExtractor={item => item.id}
+      />
+    </View>
   )
 }
+
+const ItemSeparator = () => <View style={styles.separator} />
 
 export default RepositoryList
