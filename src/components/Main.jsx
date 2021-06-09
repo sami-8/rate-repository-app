@@ -1,7 +1,10 @@
 import React from 'react'
+import { Route, Switch, Redirect } from 'react-router-native'
+import { withRouter } from 'react-router-dom'
 import { StyleSheet, View } from 'react-native'
 import RepositoryList from './RepositoryList'
 import AppBar from './AppBar'
+import SignIn from './SignIn'
 
 const styles = StyleSheet.create({
   container: {
@@ -11,15 +14,32 @@ const styles = StyleSheet.create({
   },
 })
 
-const Main = () => {
-  const tabs = [{ label: 'Repositories' }]
+const Main = ({ history }) => {
+  const tabs = [
+    {
+      label: 'Repositories',
+      action: () => history.push('/')
+    },
+    {
+      label: 'Sign in',
+      action: () => history.push('/signin')
+    },
+  ]
 
   return (
     <View style={styles.container}>
       <AppBar tabs={tabs} />
-      <RepositoryList />
+      <Switch>
+        <Route path="/" exact>
+          <RepositoryList />
+        </Route>
+        <Route path="/signin" exact>
+          <SignIn />
+        </Route>
+        <Redirect to="/" />
+      </Switch>
     </View>
   )
 }
 
-export default Main
+export default withRouter(Main)

@@ -17,13 +17,21 @@ const styles = StyleSheet.create({
   }
 })
 
-const AppBarTab = ({ label }) => {
+const AppBarTab = ({ label, action }) => {
   const [style, setStyle] = useState(styles.tab)
+
+  const onPressIn = () => {
+    setStyle(styles.pressedTab)
+  }
+  const onPressOut = () => {
+    setStyle(styles.tab)
+    action && action()
+  }
 
   return (
     <Pressable
-      onPressIn={() => setStyle(styles.pressedTab)}
-      onPressOut={() => setStyle(styles.tab)}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       style={style}>
       <Text fontWeight="bold" style={{ color: 'white' }} >{label}</Text>
     </Pressable>
