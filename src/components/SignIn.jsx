@@ -5,6 +5,7 @@ import * as yup from 'yup'
 import FormikTextInput from './FormikTextInput'
 import Text from './Text'
 import useSignIn from '../hooks/useSignIn'
+import { useHistory } from 'react-router-native'
 
 const styles = StyleSheet.create({
   form: {
@@ -35,7 +36,8 @@ const styles = StyleSheet.create({
 })
 
 const SignIn = () => {
-  const [signIn] = useSignIn()
+  const history = useHistory()
+  const { signIn } = useSignIn()
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -58,6 +60,7 @@ const SignIn = () => {
       const { data } = await signIn({ username, password })
       const { authorize: { accessToken } } = data
       console.log('token', accessToken)
+      history.push('/')
     } catch (e) {
       console.log(e)
     }

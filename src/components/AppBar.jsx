@@ -11,15 +11,21 @@ const styles = StyleSheet.create({
 })
 
 const AppBar = ({ tabs }) => {
+  const renderTabs = () => tabs.map(tab => (
+    tab
+      ? <AppBarTab
+        key={tab.label}
+        label={tab.label}
+        action={tab.action}
+      />
+      : null
+  ))
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
         <View style={{ flexDirection: 'row' }}>
-          {tabs.map(({ label, action }) =>
-            <AppBarTab
-              key={label}
-              label={label}
-              action={action} />)}
+          {renderTabs()}
         </View>
       </ScrollView>
     </View>
