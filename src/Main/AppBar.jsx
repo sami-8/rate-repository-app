@@ -2,15 +2,16 @@ import React from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
 import Constants from 'expo-constants'
 import AppBarTab from './AppBarTab'
+import theme from '../theme'
 
 const styles = StyleSheet.create({
   container: {
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#24292e',
+    backgroundColor: theme.colors.appBar.background
   },
 })
 
-const AppBar = ({ tabs }) => {
+export default function AppBar({ tabs }) {
   const renderTabs = () => tabs.map(tab => (
     tab
       ? <AppBarTab
@@ -32,4 +33,3 @@ const AppBar = ({ tabs }) => {
   )
 }
 
-export default AppBar

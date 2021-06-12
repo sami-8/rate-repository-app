@@ -1,11 +1,9 @@
 import React from 'react'
-import { View, Pressable, StyleSheet } from 'react-native'
 import { Formik } from 'formik'
+import { StyleSheet, View } from 'react-native'
 import * as yup from 'yup'
-import FormikTextInput from './FormikTextInput'
-import Text from './Text'
-import useSignIn from '../hooks/useSignIn'
-import { useHistory } from 'react-router-native'
+import Button from '../components/Button'
+import FormikTextInput from '../components/FormikTextInput'
 
 const styles = StyleSheet.create({
   form: {
@@ -16,7 +14,6 @@ const styles = StyleSheet.create({
     width: '90%',
     marginTop: 10,
     padding: 10,
-    borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
   },
@@ -24,21 +21,14 @@ const styles = StyleSheet.create({
     width: '90%',
     marginTop: 10,
     marginBottom: 10,
-    backgroundColor: '#0366d6',
-    paddingTop: 10,
-    paddingBottom: 10,
-    alignItems: 'center',
-    borderRadius: 5,
   },
-  submitButtonText: {
-    color: 'white',
-  }
 })
 
-const SignIn = () => {
-  const history = useHistory()
-  const { signIn } = useSignIn()
-
+export default function SignInForm({ onSubmit }) {
+  const initialValues = {
+    username: '',
+    password: '',
+  }
   const validationSchema = yup.object().shape({
     username: yup
       .string()
@@ -46,25 +36,9 @@ const SignIn = () => {
       .required('Username is required.'),
     password: yup
       .string()
-      .min(8, 'Password should be at least 8 characters long.')
+      .min(5, ({ min }) => `Password should be at least ${min} characters long.`)
       .required('Password is required.'),
   })
-  const initialValues = {
-    username: '',
-    password: '',
-  }
-  const onSubmit = async values => {
-    const { username, password } = values
-
-    try {
-      const { data } = await signIn({ username, password })
-      const { authorize: { accessToken } } = data
-      console.log('token', accessToken)
-      history.push('/')
-    } catch (e) {
-      console.log(e)
-    }
-  }
 
   return (
     <Formik
@@ -81,29 +55,24 @@ const Form = ({ handleSubmit }) => {
   return (
     <View style={styles.form}>
       <FormikTextInput
+        testID="singin-username"
         style={styles.input}
         name="username"
         placeholder="Username"
       />
       <FormikTextInput
+        testID="singin-password"
         style={styles.input}
         name="password"
         placeholder="Password"
         secureTextEntry
       />
-      <Pressable
-        onPress={handleSubmit}
+      <Button
+        testID="singin-submit-button"
+        action={handleSubmit}
         style={styles.submitButton}
-      >
-        <Text
-          fontWeight="bold"
-          style={styles.submitButtonText}
-        >
-          Sign in
-        </Text>
-      </Pressable>
+        text={'Sign in'} />
     </View>
   )
 }
 
-export default SignIn

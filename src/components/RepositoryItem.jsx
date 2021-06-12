@@ -1,10 +1,13 @@
 import React from 'react'
-import { Image, View, StyleSheet } from 'react-native'
+import { Image, View, StyleSheet, Pressable } from 'react-native'
+import Tag from './Tag'
 import Text from './Text'
+import theme from '../theme'
 
 const styles = StyleSheet.create({
   mainContainer: {
     paddingBottom: 5,
+    backgroundColor: theme.colors.backgroundPrimary,
   },
   bioContainer: {
     flexDirection: 'row',
@@ -35,15 +38,18 @@ const styles = StyleSheet.create({
   },
 })
 
-const RepositoryItem = ({ listItem }) => {
-  const { item } = listItem
-  const { fullName, description, language } = item
+export default function RepositoryItem({ style, item, onPress }) {
+  const { id, fullName, description, language } = item
 
   return (
-    <View style={styles.mainContainer}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.mainContainer, style]}>
+
       <View style={styles.bioContainer}>
         <BioAvatar source={{ uri: item.ownerAvatarUrl }} />
         <BioDescription
+          testID={`${id}-description`}
           fullName={fullName}
           description={description}
           language={language} />
@@ -55,7 +61,8 @@ const RepositoryItem = ({ listItem }) => {
         <StatisticItem name={'Reviews'} number={item.reviewCount} />
         <StatisticItem name={'Rating'} number={item.ratingAverage} />
       </View>
-    </View>
+
+    </Pressable>
   )
 }
 
@@ -67,29 +74,19 @@ const BioAvatar = ({ source }) => {
   )
 }
 
-const BioDescription = ({ fullName, description, language }) => {
+const BioDescription = ({ testID, fullName, description, language }) => {
   return (
     <View style={styles.bioDescription}>
       <Text fontWeight="bold" style={styles.bioDescriptionItem}>
         {fullName}
       </Text>
       <View style={{ flexDirection: 'row' }}>
-        <Text style={[styles.bioDescriptionItem, { flex: 1, flexWrap: 'wrap' }]}>
+        <Text testID={testID} style={[styles.bioDescriptionItem, { flex: 1, flexWrap: 'wrap' }]}>
           {description}
         </Text>
       </View>
       <View style={styles.bioDescriptionItemLastChild}>
-        <LanguageTag language={language} />
-      </View>
-    </View>
-  )
-}
-
-const LanguageTag = ({ language }) => {
-  return (
-    <View style={{ alignItems: 'baseline', }}>
-      <View style={{ borderRadius: 5, backgroundColor: '#0366d6', padding: 5 }}>
-        <Text fontWeight="bold" style={{ color: 'white' }}>{language}</Text>
+        <Tag text={language} />
       </View>
     </View>
   )
@@ -109,4 +106,3 @@ const StatisticItem = ({ name, number }) => {
   )
 }
 
-export default RepositoryItem

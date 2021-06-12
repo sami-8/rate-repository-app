@@ -1,30 +1,29 @@
 import React, { useState } from 'react'
 import { StyleSheet, Pressable } from 'react-native'
-import Text from './Text'
+import Text from '../components/Text'
+import theme from '../theme'
 
 const styles = StyleSheet.create({
   tab: {
     padding: 10,
     paddingBottom: 15,
-    color: 'white',
-    opacity: 1
+  },
+  tabText: {
+    color: theme.colors.appBar.foreground,
   },
   pressedTab: {
-    padding: 10,
-    paddingBottom: 15,
-    color: 'white',
     opacity: 0.8
   }
 })
 
-const AppBarTab = ({ label, action }) => {
-  const [style, setStyle] = useState(styles.tab)
+export default function AppBarTab({ label, action }) {
+  const [style, setStyle] = useState([styles.tab])
 
   const onPressIn = () => {
-    setStyle(styles.pressedTab)
+    setStyle([styles.tab, styles.pressedTab])
   }
   const onPressOut = () => {
-    setStyle(styles.tab)
+    setStyle([styles.tab])
     action && action()
   }
 
@@ -33,9 +32,8 @@ const AppBarTab = ({ label, action }) => {
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       style={style}>
-      <Text fontWeight="bold" style={{ color: 'white' }} >{label}</Text>
+      <Text fontWeight="bold" style={styles.tabText} >{label}</Text>
     </Pressable>
   )
 }
 
-export default AppBarTab

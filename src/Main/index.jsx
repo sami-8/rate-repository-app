@@ -1,26 +1,34 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Route, Switch, Redirect, useHistory } from 'react-router-native'
 import { StyleSheet, View } from 'react-native'
-import RepositoryList from './RepositoryList'
+import RepositoryList from '../RepositoryList'
 import AppBar from './AppBar'
-import SignIn from './SignIn'
-import Text from './Text'
-import { useQuery } from '@apollo/client'
-import { GET_AUTHORIZED_USER } from '../graphql/queries'
-import useSignIn from '../hooks/useSignIn'
+import SignIn from '../SignIn'
+import SignUp from '../SignUp'
+import Text from '../components/Text'
+import useAuth from '../hooks/useAuth'
+import Repository from '../Repository'
+import ReviewForm from '../ReviewForm'
+import theme from '../theme'
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     flexShrink: 1,
-    backgroundColor: '#e1e4e8',
+    backgroundColor: theme.colors.backgroundSecondary,
   },
 })
 
-const Main = () => {
+export default function Main() {
   const history = useHistory()
-  const { signOut } = useSignIn()
-  const { loading, error, data } = useQuery(GET_AUTHORIZED_USER)
+  const [
+    { authorizedUser, getAuthorizedUser, loading, error },
+    { signOut }
+  ] = useAuth()
+
+  useEffect(() => {
+    getAuthorizedUser()
+  }, [])
 
   if (loading) {
     return <><Text>loading...</Text></>
@@ -28,7 +36,6 @@ const Main = () => {
   if (error) {
     console.error(error.message)
   }
-  const { authorizedUser } = data
 
   const tabs = [
     {
@@ -38,6 +45,14 @@ const Main = () => {
     !authorizedUser && {
       label: 'Sign in',
       action: () => history.push('/signin')
+    },
+    !authorizedUser && {
+      label: 'Sign up',
+      action: () => history.push('/signup')
+    },
+    authorizedUser && {
+      label: 'Create a review',
+      action: () => history.push('/new-review')
     },
     authorizedUser && {
       label: 'Sign out',
@@ -58,10 +73,18 @@ const Main = () => {
         <Route path="/signin" exact>
           <SignIn />
         </Route>
+        <Route path="/signup" exact>
+          <SignUp />
+        </Route>
+        <Route path="/new-review" exact>
+          <ReviewForm />
+        </Route>
+        <Route path="/repository/:id">
+          <Repository />
+        </Route>
         <Redirect to="/" />
       </Switch>
     </View>
   )
 }
 
-export default Main

@@ -1,6 +1,5 @@
 import React from 'react'
-import { Text as NativeText, StyleSheet } from 'react-native'
-
+import { Text as NativeText, View, StyleSheet } from 'react-native'
 import theme from '../theme'
 
 const styles = StyleSheet.create({
@@ -24,7 +23,9 @@ const styles = StyleSheet.create({
   },
 })
 
-const Text = ({ color, fontSize, fontWeight, style, ...props }) => {
+export default function Text(props) {
+  const { color, wordWrap, fontSize, fontWeight, style, ...rest } = props
+
   const textStyle = [
     styles.text,
     color === 'textSecondary' && styles.colorTextSecondary,
@@ -34,7 +35,15 @@ const Text = ({ color, fontSize, fontWeight, style, ...props }) => {
     style,
   ]
 
-  return <NativeText style={textStyle} {...props} />
+  if (wordWrap) {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <NativeText
+          style={[{ flex: 1, flexWrap: 'wrap' }, textStyle]}
+          {...rest} />
+      </View>
+    )
+  }
+  return <NativeText style={textStyle} {...rest} />
 }
 
-export default Text
