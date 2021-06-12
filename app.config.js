@@ -32,6 +32,8 @@ export default {
   },
   extra: {
     env: process.env.ENV,
-    serverUri: process.env.APOLLO_URI,
+    serverUri: process.env.ENV !== 'production'
+      ? `http://${process.env.DEV_APOLLO_URI_IP}:5000`
+      : process.env.APOLLO_URI,
   },
 }

@@ -4,6 +4,7 @@ import { Formik } from 'formik'
 import * as yup from 'yup'
 import FormikTextInput from './FormikTextInput'
 import Text from './Text'
+import useSignIn from '../hooks/useSignIn'
 
 const styles = StyleSheet.create({
   form: {
@@ -34,6 +35,8 @@ const styles = StyleSheet.create({
 })
 
 const SignIn = () => {
+  const [signIn] = useSignIn()
+
   const validationSchema = yup.object().shape({
     username: yup
       .string()
@@ -48,8 +51,16 @@ const SignIn = () => {
     username: '',
     password: '',
   }
-  const onSubmit = values => {
-    console.log(values)
+  const onSubmit = async values => {
+    const { username, password } = values
+
+    try {
+      const { data } = await signIn({ username, password })
+      const { authorize: { accessToken } } = data
+      console.log('token', accessToken)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
